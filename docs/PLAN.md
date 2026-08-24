@@ -39,16 +39,27 @@ editorn.
    - ≤ 5 min fel → −1 poäng
    - mer fel än det → inget avdrag
 
-Implementerat och testat i `functions/scoring-engine.js`
-(`npm test` → 15/15 gröna).
+Implementerat och testat på två ställen, samma facit:
+- `functions/scoring-engine.js` (Node, ursprungsprototypen — `npm test` → 15/15 gröna)
+- `supabase/functions/scoring/_shared/scoring-engine.ts` (Deno, den som faktiskt
+  deployas — `deno test` → 9/9 gröna)
 
 ## Datamodell (Postgres-tabeller)
 
 `runners`, `editions`, `predictions`, `start_list`, `results` — vanliga
 foreign keys, Row Level Security för t.ex. att stänga gissningsrundan för
-sena gissningar. Liveposition under loppet lagras inte i en tabell alls;
-den strömmas via Broadcast och finns bara medan loppet pågår. En
-`live_pings`-tabell är valfri om ni vill kunna spela upp loppet efteråt.
+sena gissningar och att dölja andras gissningar tills loppet är avslutat.
+Liveposition under loppet lagras inte i en tabell alls; den strömmas via
+Broadcast och finns bara medan loppet pågår. En `live_pings`-tabell är
+valfri om ni vill kunna spela upp loppet efteråt.
+
+Schemat (`supabase/migrations/0001_init.sql`) är körd mot en lokal
+Postgres och verifierad: samma säsongstotal som `scoring-engine`-testerna
+räknar fram, och RLS-policyerna beter sig rätt (gissningar dolda innan
+loppet är klart, ingen kan gissa i någon annans namn). Kvar: köra samma
+migration mot ett riktigt Supabase-projekt, och koppla
+`supabase/functions/scoring/index.ts` (som väntar på `SUPABASE_URL` +
+`SUPABASE_SERVICE_ROLE_KEY`) mot det.
 
 ## Öppna frågor
 
