@@ -52,6 +52,11 @@ inklusive att gissningar verkligen döljs innan loppet är avslutat och att
 man inte kan gissa i någon annans namn). Nästa steg är att köra samma
 migration mot ett riktigt Supabase-projekt.
 
+## Sätta upp det riktiga Supabase-projektet
+
+Se [`docs/SUPABASE_SETUP.md`](docs/SUPABASE_SETUP.md) — steg för steg,
+`brew install` till `supabase functions deploy`, plus ett rök-test på slutet.
+
 ## Nuvarande status
 
 Se roadmap-tabellen ("Rekommenderad startlista") i projektplanen för
