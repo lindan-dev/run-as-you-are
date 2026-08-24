@@ -1,0 +1,10 @@
+{
+  "name": "run-as-you-are-scoring",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Startordning, placeringspoäng och träffsäkerhetsavdrag för Run As You Are — ren logik, tänkt att köras som Firebase Cloud Function.",
+  "main": "scoring-engine.js",
+  "scripts": {
+    "test": "node scoring-engine.test.js"
+  }
+}
