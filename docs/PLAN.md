@@ -11,12 +11,13 @@ editorn.
 
 - **Plattform:** SwiftUI (rent iOS, inget cross-platform-lager). Alla i
   gänget har iPhone.
-- **Backend:** Firebase — Firestore + Auth + Cloud Functions. Firestores
-  realtidslyssnare bär livekartan.
-- **Livespårning (MVP):** telefonens egen GPS delas till Firestore var
-  5–15 sek, ingen Garmin/Apple Watch-integration krävs för att den ska
-  fungera. Garmin LiveTrack-länk och HealthKit-import är tillägg, inte
-  beroenden.
+- **Backend:** Supabase — Postgres + Auth + Edge Functions. Redan i bruk i
+  fiftytwoormore, och maratontabellens data är i grunden relationell.
+- **Livespårning (MVP):** telefonens egen GPS strömmas direkt via en
+  Supabase Realtime Broadcast-kanal, ingen Garmin/Apple Watch-integration
+  krävs för att den ska fungera, och ingen tabell behöver skrivas till för
+  varje position. Garmin LiveTrack-länk och HealthKit-import är tillägg,
+  inte beroenden.
 - **Distribution:** TestFlight, inte App Store. Kom ihåg: builds går ut
   efter 90 dagar.
 
@@ -40,6 +41,14 @@ editorn.
 
 Implementerat och testat i `functions/scoring-engine.js`
 (`npm test` → 15/15 gröna).
+
+## Datamodell (Postgres-tabeller)
+
+`runners`, `editions`, `predictions`, `start_list`, `results` — vanliga
+foreign keys, Row Level Security för t.ex. att stänga gissningsrundan för
+sena gissningar. Liveposition under loppet lagras inte i en tabell alls;
+den strömmas via Broadcast och finns bara medan loppet pågår. En
+`live_pings`-tabell är valfri om ni vill kunna spela upp loppet efteråt.
 
 ## Öppna frågor
 

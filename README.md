@@ -11,8 +11,8 @@ resultatarkiv och tidtagning.
 ```
 run-as-you-are/
 ├── functions/          Poängmotorn — startordning, placeringspoäng,
-│                       träffsäkerhetsavdrag. Ren JS, inga Firebase-beroenden
-│                       ännu, tänkt att bli en Cloud Function.
+│                       träffsäkerhetsavdrag. Ren JS, inga backend-beroenden
+│                       ännu, tänkt att bli en Supabase Edge Function.
 │   ├── scoring-engine.js
 │   ├── scoring-engine.test.js
 │   └── package.json
@@ -30,8 +30,8 @@ npm test        # kör de 15 testfallen för poängmotorn
 ```
 
 Ingen build krävs för `functions/` än — den är avsiktligt fri från
-Firebase-beroenden så logiken går att verifiera fristående innan den
-kopplas in i ett Cloud Functions-projekt.
+backend-beroenden så logiken går att verifiera fristående innan den
+kopplas in i ett Supabase-projekt (Postgres + Auth + Edge Functions).
 
 ## Nuvarande status
 
