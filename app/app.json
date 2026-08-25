@@ -1,0 +1,44 @@
+{
+  "expo": {
+    "name": "Run As You Are",
+    "slug": "run-as-you-are",
+    "version": "1.0.0",
+    "scheme": "runasyouare",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F2EFE6"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.lindan.runasyouare",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Run As You Are använder din plats för att visa dig live på kartan under loppet.",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.lindan.runasyouare",
+      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Run As You Are använder din plats för att visa dig live på kartan under loppet."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#D9491F"
+        }
+      ]
+    ]
+  }
+}
