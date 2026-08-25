@@ -67,8 +67,20 @@ async function computeAndStoreStartList(supabase: AnySupabaseClient, editionId: 
     .eq('year', edition.year - 1)
     .maybeSingle();
 
-  const { data: runners } = await supabase.from('runners').select('*');
-  if (!runners) return jsonResponse({ error: 'Inga löpare' }, 500);
+  // Bara löparna som faktiskt bekräftat att de springer DEN HÄR upplagan —
+  // inte alla som någonsin registrerats. En rad i edition_entries med
+  // status "declined", eller ingen rad alls (har inte svarat än), ska inte
+  // få en startplats uträknad.
+  const { data: confirmedEntries } = await supabase
+    .from('edition_entries')
+    .select('runner_id, runners(*)')
+    .eq('edition_id', editionId)
+    .eq('status', 'confirmed');
+  if (!confirmedEntries) return jsonResponse({ error: 'Kunde inte läsa anmälningar' }, 500);
+  if (confirmedEntries.length === 0) {
+    return jsonResponse({ error: 'Ingen har bekräftat den här upplagan än', startList: [] }, 200);
+  }
+  const runners = confirmedEntries.map((e: any) => e.runners);
 
   const entries: StartBasisEntry[] = [];
   for (const runner of runners) {
