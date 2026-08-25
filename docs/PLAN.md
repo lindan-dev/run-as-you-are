@@ -46,20 +46,28 @@ Implementerat och testat på två ställen, samma facit:
 
 ## Datamodell (Postgres-tabeller)
 
-`runners`, `editions`, `predictions`, `start_list`, `results` — vanliga
-foreign keys, Row Level Security för t.ex. att stänga gissningsrundan för
-sena gissningar och att dölja andras gissningar tills loppet är avslutat.
-Liveposition under loppet lagras inte i en tabell alls; den strömmas via
-Broadcast och finns bara medan loppet pågår. En `live_pings`-tabell är
-valfri om ni vill kunna spela upp loppet efteråt.
+`runners`, `editions`, `predictions`, `start_list`, `results`,
+`edition_entries` — vanliga foreign keys, Row Level Security för t.ex.
+att stänga gissningsrundan för sena gissningar och att dölja andras
+gissningar tills loppet är avslutat. Liveposition under loppet lagras
+inte i en tabell alls; den strömmas via Broadcast och finns bara medan
+loppet pågår. En `live_pings`-tabell är valfri om ni vill kunna spela
+upp loppet efteråt.
 
-Schemat (`supabase/migrations/0001_init.sql`) är körd mot en lokal
-Postgres och verifierad: samma säsongstotal som `scoring-engine`-testerna
-räknar fram, och RLS-policyerna beter sig rätt (gissningar dolda innan
-loppet är klart, ingen kan gissa i någon annans namn). Kvar: köra samma
-migration mot ett riktigt Supabase-projekt, och koppla
-`supabase/functions/scoring/index.ts` (som väntar på `SUPABASE_URL` +
-`SUPABASE_SERVICE_ROLE_KEY`) mot det.
+`edition_entries` (edition_id, runner_id, status: confirmed/declined)
+svarar på "är den här redan-registrerade löparen faktiskt med i ÅRETS
+upplaga?" — skiljt från "har löparen en giltig tid från förra året".
+Ingen rad alls = har inte svarat än. Startlistan (`compute-start-list`
+i Edge Function) räknar bara på de bekräftade — annars hade den räknat
+startplats åt folk som kanske slutat springa för flera år sen.
+
+Schemat (`supabase/migrations/0001_init.sql` + `0002_edition_entries.sql`)
+är kört mot en lokal Postgres och verifierat: samma säsongstotal som
+`scoring-engine`-testerna räknar fram, RLS-policyerna beter sig rätt
+(gissningar dolda innan loppet är klart, ingen kan gissa eller
+bekräfta i någon annans namn), och `edition_entries`-filtret i
+Edge Function-frågan exkluderar korrekt de som tackat nej eller inte
+svarat. Kvar: köra samma migrationer mot det riktiga Supabase-projektet.
 
 ## Öppna frågor
 
